@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import {resolve} from 'url'
 import {useRouter} from 'next/router'
-import Header from '@components/Header'
-import Footer from '@components/Footer'
 import {api} from '@services/api'
 
 const handleError = (err) => {
@@ -46,7 +44,7 @@ const Election = ({election, pid}) => {
   console.log(pid)
   console.log(election)
   if (!election) {
-    return (<Header title="Could not find this election" />)
+    return (<h1>Could not find this election</h1>)
   }
   else {
     return (
@@ -58,8 +56,6 @@ const Election = ({election, pid}) => {
         </Head>
 
         <main>
-          <Header title={` Election pid ${pid}`} />
-          <Header title={election.title} />
           {election.candidates.map((candidate, index) =>
             <p key={index} className="description">
               {candidate}

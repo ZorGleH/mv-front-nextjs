@@ -1,10 +1,10 @@
 import React from "react";
-import logo from "./loader-pulse-2.gif";
+import Image from 'next/image'
 
 const Loader = () => {
   return (
     <div className="loader bg-primary">
-      <img src={logo} alt="Loading..." />
+      <Image src="loader-pulse-2.gif" alt="Loading..." />
     </div>
   );
 };
