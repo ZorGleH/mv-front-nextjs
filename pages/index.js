@@ -1,39 +1,76 @@
-import Head from 'next/head'
-import Header from '@components/Header'
-import Footer from '@components/Footer'
+import {useState} from 'react'
+import Head from 'next/head';
+import Link from 'next/link';
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
+import {useTranslation} from 'next-i18next'
+import {Container, Row, Col, Button, Input} from "reactstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faRocket} from "@fortawesome/free-solid-svg-icons";
+import logoLine from "@styles/logos/logo-line-white.svg";
 
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch('https://randomuser.me/api/')
-  const users = await res.json()
+export const getStaticProps = async ({locale}) => ({
+  props: {
+    ...await serverSideTranslations(locale, ['common', 'resources']),
+  },
+})
 
-  // Pass data to the page via props
-  return {props: {users}}
-
-}
-
-const Home = ({users}) => {
-  // this console log appears on the server side, not on the client side!
-  console.log(users)
+const Home = () => {
+  const [title, setTitle] = useState(null)
+  const {t} = useTranslation();
+  console.log(t)
   return (
-    <div className="container">
-      <Head>
-        <title>This is fetch on the server</title>
-        <link rel="icon" href="/favicon.ico" />
-        <meta property="og:title" content="My new title" />
-      </Head>
-
-      <main>
-        <Header title="Fetched from the server" />
-        {users && users.results.map((user, index) =>
-          <p key={index} className="description">
-            {`${user.name.first} ${user.name.last}`}
-          </p>
-        )}
-      </main>
-
-      <Footer />
-    </div>
-  )
+    <Container>
+      <form autoComplete="off">
+        <Row>
+          <img
+            src={logoLine}
+            alt="logo of Mieux Voter"
+            height="128"
+            className="d-block ml-auto mr-auto mb-4"
+          />
+        </Row>
+        <Row>
+          <Col className="text-center">
+            <h3>
+              {t(
+                "Simple and free: organize an election with Majority Judgment."
+              )}
+            </h3>
+          </Col>
+        </Row>
+        <Row className="mt-2">
+          <Col xs="12" md="9" xl="6" className="offset-xl-2">
+            <Input
+              placeholder={t("Write here the question of your election")}
+              autoFocus
+              required
+              className="mt-2"
+              name="title"
+              value={title ? title : ""}
+              onChange={setTitle}
+              maxLength="250"
+            />
+          </Col>
+          <Col xs="12" md="3" xl="2">
+            <Link href="/new/">
+              <Button
+                type="submit"
+                className="btn btn-block btn-secondary mt-2"
+              >
+                <FontAwesomeIcon icon={faRocket} className="mr-2" />
+                {t("Start")}
+              </Button>
+            </Link>
+          </Col>
+        </Row>
+        <Row className="mt-4">
+          <Col className="text-center">
+            <p>{t("No advertising or ad cookies")}</p>
+          </Col>
+        </Row>
+      </form>
+    </Container>
+  );
 }
-export default Home
+
+export default Home;
