@@ -55,7 +55,7 @@ const ConfirmElection = ({election, pid}) => {
         </Head>
 
         <main>
-          <Header title="You have succesfully voted for this election!" />
+          <h1>You have succesfully voted for this election!</h1>
         </main>
 
         <Footer />

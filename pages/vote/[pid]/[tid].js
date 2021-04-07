@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import {resolve} from 'url'
 import {useRouter} from 'next/router'
-import Header from '@components/Header'
-import Footer from '@components/Footer'
 import {api} from '@services/api'
 
 const handleError = (err) => {
@@ -44,31 +42,24 @@ const Election = ({election, pid}) => {
   // this console log appears on the server side, not on the client side!
   console.log(pid)
   console.log(election)
-  if (!election) {
-    return (<Header title="Could not find this election" />)
-  }
-  else {
-    return (
-      <div className="container">
-        <Head>
-          <title>This is fetch on the server</title>
-          <link rel="icon" href="/favicon.ico" />
-          <meta property="og:title" content="My new title" />
-        </Head>
+  return (
+    <div className="container">
+      <Head>
+        <title>This is fetch on the server</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta property="og:title" content="My new title" />
+      </Head>
 
-        <main>
-          <Header title={` Election pid ${pid}`} />
-          <Header title={election.title} />
-          {election.candidates.map((candidate, index) =>
-            <p key={index} className="description">
-              {candidate}
-            </p>
-          )}
-        </main>
+      <main>
+        {election.candidates.map((candidate, index) =>
+          <p key={index} className="description">
+            {candidate}
+          </p>
+        )}
+      </main>
 
-        <Footer />
-      </div>
-    )
-  }
+      <Footer />
+    </div>
+  )
 }
 export default Election
