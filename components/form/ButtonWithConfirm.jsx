@@ -1,62 +1,56 @@
-/* eslint react/prop-types: 0 */
-import React, { Component } from "react";
-import ModalConfirm from "./ModalConfirm";
+import {useState} from "react";
+import {
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useTranslation} from "next-i18next";
 
-class ButtonWithConfirm extends Component {
-  constructor(props) {
-    super(props);
-    this._modalConfirm = React.createRef();
-    this.state = {
-      focused: false
-    };
-  }
+const ButtonWithConfirm = ({className, label, onDelete}) => {
+  const [visibled, setVisibility] = useState(false);
+  const {t} = useTranslation();
 
-  getComponent = key => {
-    return this.props.children.filter(comp => {
-      return comp.key === key;
-    });
-  };
+  const toggle = () => setVisibility(!visibled)
 
-  render() {
-    const classNames = this.props.className.split(" ");
-
-    let classNameForDiv = "";
-    let classNameForButton = "";
-    classNames.forEach(function(className) {
-      if (
-        className === "input-group-prepend" ||
-        className === "input-group-append"
-      ) {
-        classNameForDiv += " " + className;
-      } else {
-        classNameForButton += " " + className;
-      }
-    });
-
-    return (
-      <div className={classNameForDiv}>
-        <button
-          type="button"
-          className={classNameForButton}
-          onClick={() => {
-            this._modalConfirm.current.toggle();
-          }}
-          tabIndex={this.props.tabIndex}
-        >
-          {this.getComponent("button")}
-        </button>
-        <ModalConfirm
-          className={this.props.modalClassName}
-          ref={this._modalConfirm}
-        >
-          <div key="title">{this.getComponent("modal-title")}</div>
-          <div key="body">{this.getComponent("modal-body")}</div>
-          <div key="confirm">{this.getComponent("modal-confirm")}</div>
-          <div key="cancel">{this.getComponent("modal-cancel")}</div>
-        </ModalConfirm>
-      </div>
-    );
-  }
+  return (
+    <div className="classNameForDiv">
+      <button
+        type="button"
+        className={className}
+        onClick={toggle}
+      >
+        <FontAwesomeIcon icon={faTrashAlt} />
+      </button>
+      <Modal
+        isOpen={visibled}
+        toggle={toggle}
+        className="modal-dialog-centered"
+      >
+        <ModalHeader toggle={toggle}>{t("Delete?")}</ModalHeader>
+        <ModalBody>
+          {t("Are you sure to delete")}{" "}
+          {label && label !== "" ? (
+            <b>&quot;{candidate.label}&quot;</b>
+          ) : (
+            <>{t("the row")}</>
+          )}{" "}
+                ?
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="primary-outline"
+            className="text-primary border-primary"
+            onClick={() => {toggle(); onDelete();}}
+          >
+            {t("Yes")}
+          </Button>
+          <Button color="primary" onClick={toggle}>
+            {t("No")}
+          </Button>
+        </ModalFooter>
+      </Modal>
+    </div >
+  );
 }
 
 export default ButtonWithConfirm;

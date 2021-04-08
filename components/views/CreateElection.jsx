@@ -1,6 +1,6 @@
 /* eslint react/prop-types: 0 */
-import React, { Component } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import React, {Component} from "react";
+import {Redirect, withRouter} from "react-router-dom";
 import {
   Collapse,
   Container,
@@ -14,12 +14,12 @@ import {
   Card,
   CardBody
 } from "reactstrap";
-import { withTranslation } from "react-i18next";
-import { ReactMultiEmail, isEmail } from "react-multi-email";
+import {useTranslation} from "next-i18next";
+import {ReactMultiEmail, isEmail} from "react-multi-email";
 import "react-multi-email/style.css";
-import { toast, ToastContainer } from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { resolve } from "url";
+import {resolve} from "url";
 import queryString from "query-string";
 import {
   arrayMove,
@@ -27,7 +27,7 @@ import {
   sortableElement,
   sortableHandle
 } from "react-sortable-hoc";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faTrashAlt,
@@ -35,8 +35,8 @@ import {
   faCogs,
   faExclamationTriangle
 } from "@fortawesome/free-solid-svg-icons";
-import { i18nGrades } from "../../Util";
-import { AppContext } from "../../AppContext";
+import {i18nGrades} from "../../Util";
+import {AppContext} from "../../AppContext";
 import HelpButton from "../form/HelpButton";
 import ButtonWithConfirm from "../form/ButtonWithConfirm";
 import Loader from "../wait";
@@ -73,7 +73,7 @@ const timeMinusDate = date => time(getOnlyValidDate(date));
 const dateMinusTime = date =>
   new Date(getOnlyValidDate(date).getTime() - time(getOnlyValidDate(date)));
 
-const DragHandle = sortableHandle(({ children }) => (
+const DragHandle = sortableHandle(({children}) => (
   <span className="input-group-text indexNumber">{children}</span>
 ));
 
@@ -87,7 +87,7 @@ const displayClockOptions = () =>
     ));
 
 const SortableCandidate = sortableElement(
-  ({ candidate, sortIndex, form, t }) => (
+  ({candidate, sortIndex, form, t}) => (
     <li className="sortable">
       <Row key={"rowCandidate" + sortIndex}>
         <Col>
@@ -113,7 +113,7 @@ const SortableCandidate = sortableElement(
               <div key="button">
                 <FontAwesomeIcon icon={faTrashAlt} />
               </div>
-              <div key="modal-title">{t("Delete?")}</div>
+              <div key="modal-title"></div>
               <div key="modal-body">
                 {t("Are you sure to delete")}{" "}
                 {candidate.label !== "" ? (
@@ -147,7 +147,7 @@ const SortableCandidate = sortableElement(
   )
 );
 
-const SortableCandidatesContainer = sortableContainer(({ items, form, t }) => {
+const SortableCandidatesContainer = sortableContainer(({items, form, t}) => {
   return (
     <ul className="sortable">
       {items.map((candidate, index) => (
@@ -173,10 +173,10 @@ class CreateElection extends Component {
     const start = new Date(
       now.getTime() - minutes(now) - seconds(now) - ms(now)
     );
-    const { title } = queryString.parse(this.props.location.search);
+    const {title} = queryString.parse(this.props.location.search);
 
     this.state = {
-      candidates: [{ label: "" }, { label: "" }],
+      candidates: [{label: ""}, {label: ""}],
       title: title || "",
       isVisibleTipsDragAndDropCandidate: true,
       numGrades: 7,
@@ -199,22 +199,22 @@ class CreateElection extends Component {
   }
 
   handleChangeTitle = event => {
-    this.setState({ title: event.target.value });
+    this.setState({title: event.target.value});
   };
 
   handleIsTimeLimited = event => {
-    this.setState({ isTimeLimited: event.target.value === "1" });
+    this.setState({isTimeLimited: event.target.value === "1"});
   };
 
   handleRestrictResultCheck = event => {
-    this.setState({ restrictResult: event.target.value === "1" });
+    this.setState({restrictResult: event.target.value === "1"});
   };
 
   addCandidate = event => {
     let candidates = this.state.candidates;
     if (candidates.length < 100) {
-      candidates.push({ label: "" });
-      this.setState({ candidates: candidates });
+      candidates.push({label: ""});
+      this.setState({candidates: candidates});
     }
     if (event.type === "keypress") {
       setTimeout(() => {
@@ -227,9 +227,9 @@ class CreateElection extends Component {
     let candidates = this.state.candidates;
     candidates.splice(index, 1);
     if (candidates.length === 0) {
-      candidates = [{ label: "" }];
+      candidates = [{label: ""}];
     }
-    this.setState({ candidates: candidates });
+    this.setState({candidates: candidates});
   };
 
   editCandidateLabel = (event, index) => {
@@ -254,24 +254,24 @@ class CreateElection extends Component {
     }
   };
 
-  onCandidatesSortEnd = ({ oldIndex, newIndex }) => {
+  onCandidatesSortEnd = ({oldIndex, newIndex}) => {
     let candidates = this.state.candidates;
     candidates = arrayMove(candidates, oldIndex, newIndex);
-    this.setState({ candidates: candidates });
+    this.setState({candidates: candidates});
   };
 
   handleChangeNumGrades = event => {
-    this.setState({ numGrades: event.target.value });
+    this.setState({numGrades: event.target.value});
   };
 
   toggleAdvancedOptions = () => {
-    this.setState({ isAdvancedOptionsOpen: !this.state.isAdvancedOptionsOpen });
+    this.setState({isAdvancedOptionsOpen: !this.state.isAdvancedOptionsOpen});
   };
 
   checkFields() {
-    const { candidates, title } = this.state;
+    const {candidates, title} = this.state;
     if (!candidates) {
-      return { ok: false, msg: AT_LEAST_2_CANDIDATES_ERROR };
+      return {ok: false, msg: AT_LEAST_2_CANDIDATES_ERROR};
     }
 
     let numCandidates = 0;
@@ -279,14 +279,14 @@ class CreateElection extends Component {
       if (c.label !== "") numCandidates += 1;
     });
     if (numCandidates < 2) {
-      return { ok: false, msg: AT_LEAST_2_CANDIDATES_ERROR };
+      return {ok: false, msg: AT_LEAST_2_CANDIDATES_ERROR};
     }
 
     if (!title || title === "") {
-      return { ok: false, msg: NO_TITLE_ERROR };
+      return {ok: false, msg: NO_TITLE_ERROR};
     }
 
-    return { ok: true, msg: "OK" };
+    return {ok: true, msg: "OK"};
   }
 
   handleSubmit() {
@@ -307,15 +307,15 @@ class CreateElection extends Component {
       this.context.routesServer.setElection
     );
 
-    if(!this.state.isTimeLimited){
+    if (!this.state.isTimeLimited) {
       let now = new Date();
       start = new Date(
-          now.getTime() - minutes(now) - seconds(now) - ms(now)
+        now.getTime() - minutes(now) - seconds(now) - ms(now)
       );
-      finish=new Date(start.getTime() + 10 * 365 * 24 * 3600 * 1000);
+      finish = new Date(start.getTime() + 10 * 365 * 24 * 3600 * 1000);
     }
 
-    const { t } = this.props;
+    const {t} = this.props;
     const locale =
       i18n.language.substring(0, 2).toLowerCase() === "fr" ? "fr" : "en";
 
@@ -327,7 +327,7 @@ class CreateElection extends Component {
       return;
     }
 
-    this.setState({ waiting: true });
+    this.setState({waiting: true});
 
     fetch(endpoint, {
       method: "POST",
@@ -363,14 +363,14 @@ class CreateElection extends Component {
           toast.error(t("Unknown error. Try again please."), {
             position: toast.POSITION.TOP_CENTER
           });
-          this.setState({ waiting: false });
+          this.setState({waiting: false});
         }
       })
       .catch(error => error);
   }
 
   handleSendNotReady = msg => {
-    const { t } = this.props;
+    const {t} = this.props;
     toast.error(t(msg), {
       position: toast.POSITION.TOP_CENTER
     });
@@ -389,7 +389,7 @@ class CreateElection extends Component {
       isAdvancedOptionsOpen,
       electorEmails
     } = this.state;
-    const { t } = this.props;
+    const {t} = this.props;
 
     const grades = i18nGrades();
     const check = this.checkFields();
@@ -572,7 +572,7 @@ class CreateElection extends Component {
                   </Col>
                 </Row>
                 <div
-                  className={(this.state.isTimeLimited ? "d-block " : "d-none")+" bg-light p-3"}
+                  className={(this.state.isTimeLimited ? "d-block " : "d-none") + " bg-light p-3"}
                 >
                   <Row >
                     <Col xs="12" md="3" lg="3">
@@ -587,7 +587,7 @@ class CreateElection extends Component {
                           this.setState({
                             start: new Date(
                               timeMinusDate(start) +
-                                new Date(e.target.valueAsNumber).getTime()
+                              new Date(e.target.valueAsNumber).getTime()
                             )
                           });
                         }}
@@ -601,7 +601,7 @@ class CreateElection extends Component {
                           this.setState({
                             start: new Date(
                               dateMinusTime(start).getTime() +
-                                e.target.value * 3600000
+                              e.target.value * 3600000
                             )
                           })
                         }
@@ -625,7 +625,7 @@ class CreateElection extends Component {
                           this.setState({
                             finish: new Date(
                               timeMinusDate(finish) +
-                                new Date(e.target.valueAsNumber).getTime()
+                              new Date(e.target.valueAsNumber).getTime()
                             )
                           });
                         }}
@@ -639,7 +639,7 @@ class CreateElection extends Component {
                           this.setState({
                             finish: new Date(
                               dateMinusTime(finish).getTime() +
-                                e.target.value * 3600000
+                              e.target.value * 3600000
                             )
                           })
                         }
@@ -712,7 +712,7 @@ class CreateElection extends Component {
                       placeholder={t("Add here participants' emails")}
                       emails={electorEmails}
                       onChange={_emails => {
-                        this.setState({ electorEmails: _emails });
+                        this.setState({electorEmails: _emails});
                       }}
                       validateEmail={email => {
                         return isEmail(email); // return boolean
@@ -783,21 +783,21 @@ class CreateElection extends Component {
                         </ul>
                       </div>
                       <div className={(this.state.isTimeLimited ? "d-block " : "d-none")} >
-                      <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
-                        {t("Dates")}
-                      </div>
-                      <div className="p-2 pl-3 pr-3 bg-light mb-3">
-                        {t("The election will take place from")}{" "}
-                        <b>
-                          {start.toLocaleDateString()}, {t("at")}{" "}
-                          {start.toLocaleTimeString()}
-                        </b>{" "}
-                        {t("to")}{" "}
-                        <b>
-                          {finish.toLocaleDateString()}, {t("at")}{" "}
-                          {finish.toLocaleTimeString()}
-                        </b>
-                      </div>
+                        <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
+                          {t("Dates")}
+                        </div>
+                        <div className="p-2 pl-3 pr-3 bg-light mb-3">
+                          {t("The election will take place from")}{" "}
+                          <b>
+                            {start.toLocaleDateString()}, {t("at")}{" "}
+                            {start.toLocaleTimeString()}
+                          </b>{" "}
+                          {t("to")}{" "}
+                          <b>
+                            {finish.toLocaleDateString()}, {t("at")}{" "}
+                            {finish.toLocaleTimeString()}
+                          </b>
+                        </div>
                       </div>
                       <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
                         {t("Grades")}
@@ -861,7 +861,7 @@ class CreateElection extends Component {
                                     "The results page will not be accessible until the end date is reached."
                                   )}{" "}
                                   ({finish.toLocaleDateString()} {t("at")}{" "}
-                                    {finish.toLocaleTimeString()})
+                                  {finish.toLocaleTimeString()})
                                 </span>
                               )}
                             </p>
