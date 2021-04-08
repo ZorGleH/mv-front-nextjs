@@ -26,7 +26,7 @@ const Paypal = () => {
       >
         <button
           type="submit"
-          className="btn"
+          className="btn btn-primary"
           title={t("PayPal - The safer, easier way to pay online!")}
         >
           {" "}

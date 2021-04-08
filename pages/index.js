@@ -9,7 +9,7 @@ import {faRocket} from "@fortawesome/free-solid-svg-icons";
 
 export const getStaticProps = async ({locale}) => ({
   props: {
-    ...await serverSideTranslations(locale, ['common', 'resources']),
+    ...await serverSideTranslations(locale),
   },
 })
 
@@ -31,9 +31,7 @@ const Home = () => {
         <Row>
           <Col className="text-center">
             <h3>
-              {t(
-                "Simple and free: organize an election with Majority Judgment."
-              )}
+              {t("organize an election with Majority Judgment.")}
             </h3>
           </Col>
         </Row>
