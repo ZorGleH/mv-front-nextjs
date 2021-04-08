@@ -15,6 +15,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@svgr/webpack": "^5.5.0",
+    "array-move": "^3.0.1",
     "bootstrap": "^4.6.0",
     "bootstrap-scss": "^4.6.0",
     "next": "^10.0.9",

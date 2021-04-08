@@ -13,7 +13,7 @@ const ButtonWithConfirm = ({className, label, onDelete}) => {
   const toggle = () => setVisibility(!visibled)
 
   return (
-    <div className="classNameForDiv">
+    <div className="input-group-append">
       <button
         type="button"
         className={className}
@@ -30,7 +30,7 @@ const ButtonWithConfirm = ({className, label, onDelete}) => {
         <ModalBody>
           {t("Are you sure to delete")}{" "}
           {label && label !== "" ? (
-            <b>&quot;{candidate.label}&quot;</b>
+            <b>&quot;{label}&quot;</b>
           ) : (
             <>{t("the row")}</>
           )}{" "}

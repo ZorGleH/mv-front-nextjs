@@ -33,6 +33,7 @@ import {translateGrades} from '@services/grades'
 import HelpButton from "@components/form/HelpButton";
 import Loader from "@components/wait";
 import CandidatesField from "@components/form/CandidatesField";
+import ConfirmModal from "@components/form/ConfirmModal";
 
 // Error messages
 const AT_LEAST_2_CANDIDATES_ERROR = "Please add at least 2 candidates.";
@@ -175,6 +176,7 @@ const CreateElection = (props) => {
   };
 
   const check = checkFields();
+  console.log(check.msg)
   const grades = translateGrades(t);
 
 
@@ -225,21 +227,7 @@ const CreateElection = (props) => {
             <Label for="title">{t("Candidates/Proposals")}</Label>
           </Col>
           <Col xs="12">
-            <CandidatesField candidates={candidates} setCandidates={setCandidates} />
-          </Col>
-        </Row>
-        <Row className="justify-content-between">
-          <Col xs="12" sm="6" md="5" lg="4">
-            <Button
-              color="secondary"
-              className="btn-block mt-2"
-              tabIndex={candidates.length + 2}
-              type="button"
-              onClick={addCandidate}
-            >
-              <FontAwesomeIcon icon={faPlus} className="mr-2" />
-              {t("Add a proposal")}
-            </Button>
+            <CandidatesField onChange={setCandidates} />
           </Col>
           <Col
             xs="12"
@@ -521,121 +509,17 @@ const CreateElection = (props) => {
         <Row className="justify-content-end mt-2">
           <Col xs="12" md="3">
             {check.ok ? (
-              <ButtonWithConfirm
-                className="btn btn-success float-right btn-block"
-                tabIndex={candidates.length + 4}
-              >
-                <div key="button">
-                  <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                  {t("Validate")}
-                </div>
-                <div key="modal-title" className="text-primary bold">
-                  {t("Confirm your vote")}
-                </div>
-                <div key="modal-body">
-                  <div className="mt-1 mb-1">
-                    <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
-                      {t("Question of the election")}
-                    </div>
-                    <div className="p-2 pl-3 pr-3 bg-light mb-3">{title}</div>
-                    <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
-                      {t("Candidates/Proposals")}
-                    </div>
-                    <div className="p-2 pl-3 pr-3 bg-light mb-3">
-                    </div>
-                    <div className={(isTimeLimited ? "d-block " : "d-none")} >
-                      <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
-                        {t("Dates")}
-                      </div>
-                      <div className="p-2 pl-3 pr-3 bg-light mb-3">
-                        {t("The election will take place from")}{" "}
-                        <b>
-                          {start.toLocaleDateString()}, {t("at")}{" "}
-                          {start.toLocaleTimeString()}
-                        </b>{" "}
-                        {t("to")}{" "}
-                        <b>
-                          {finish.toLocaleDateString()}, {t("at")}{" "}
-                          {finish.toLocaleTimeString()}
-                        </b>
-                      </div>
-                    </div>
-                    <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
-                      {t("Grades")}
-                    </div>
-                    <div className="p-2 pl-3 pr-3 bg-light mb-3">
-                      {grades.map((mention, i) => {
-                        return i < numGrades ? (
-                          <span
-                            key={i}
-                            className="badge badge-light mr-2 mt-2"
-                            style={{
-                              backgroundColor: mention.color,
-                              color: "#fff"
-                            }}
-                          >
-                            {mention.label}
-                          </span>
-                        ) : (
-                          <span key={i} />
-                        );
-                      })}
-                    </div>
-                    <div className="text-white bg-primary p-2 pl-3 pr-3 rounded">
-                      {t("Voters' list")}
-                    </div>
-                    <div className="p-2 pl-3 pr-3 bg-light mb-3">
-                      {emails.length > 0 ? (
-                        emails.join(", ")
-                      ) : (
-                        <p>
-                          {t("The form contains no address.")}
-                          <br />
-                          <em>
-                            {t(
-                              "The election will be opened to anyone with the link"
-                            )}
-                          </em>
-                        </p>
-                      )}
-                    </div>
-                    {restrictResult ? (
-                      <div>
-                        <div className="small bg-primary text-white p-3 mt-2 rounded">
-                          <h6 className="m-0 p-0">
-                            <FontAwesomeIcon
-                              icon={faExclamationTriangle}
-                              className="mr-2"
-                            />
-                            <u>{t("Results available at the close of the vote")}</u>
-                          </h6>
-                          <p className="m-2 p-0">
-                            {emails.length > 0 ? (
-                              <span>
-                                {t(
-                                  "The results page will not be accessible until all participants have voted."
-                                )}
-                              </span>
-                            ) : (
-                              <span>
-                                {t(
-                                  "The results page will not be accessible until the end date is reached."
-                                )}{" "}
-                                  ({finish.toLocaleDateString()} {t("at")}{" "}
-                                {finish.toLocaleTimeString()})
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-                <div key="modal-confirm" onClick={handleSubmit}>
-                  {t("Start the election")}
-                </div>
-                <div key="modal-cancel">{t("Cancel")}</div>
-              </ButtonWithConfirm>
+              <ConfirmModal
+                title={title}
+                candidates={candidates}
+                isTimeLimited={isTimeLimited}
+                start={start}
+                finish={finish}
+                emails={emails}
+                grades={grades.slice(0, numGrades)}
+                className={"btn btn-success float-right btn-block"}
+                tabIndex={candidates.length + 1}
+              />
             ) : (
               <Button
                 type="button"
