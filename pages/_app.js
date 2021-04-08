@@ -11,7 +11,9 @@ import Footer from '@components/layouts/Footer'
 function Application({Component, pageProps}) {
   return (<AppProvider>
     <Header />
-    <Component {...pageProps} />
+    <main className="d-flex flex-column justify-content-center">
+      <Component {...pageProps} />
+    </main>
     <Footer />
   </AppProvider>);
 }

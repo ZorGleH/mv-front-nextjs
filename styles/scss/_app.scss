@@ -36,8 +36,8 @@ $theme-colors: (
 }
 html,
 body,
-#root,
-#root > div {
+#__next,
+#__next > div {
   height: 100%;
 }
 

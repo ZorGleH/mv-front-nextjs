@@ -6,7 +6,6 @@ import {useTranslation} from 'next-i18next'
 import {Container, Row, Col, Button, Input} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRocket} from "@fortawesome/free-solid-svg-icons";
-import logoLine from "@styles/logos/logo-line-white.svg";
 
 export const getStaticProps = async ({locale}) => ({
   props: {
@@ -19,11 +18,11 @@ const Home = () => {
   const {t} = useTranslation();
   console.log(t)
   return (
-    <Container>
+    <Container >
       <form autoComplete="off">
         <Row>
           <img
-            src={logoLine}
+            src="logos/logo-line-white.svg"
             alt="logo of Mieux Voter"
             height="128"
             className="d-block ml-auto mr-auto mb-4"
@@ -47,12 +46,12 @@ const Home = () => {
               className="mt-2"
               name="title"
               value={title ? title : ""}
-              onChange={setTitle}
+              onChange={e => setTitle(e.target.value)}
               maxLength="250"
             />
           </Col>
           <Col xs="12" md="3" xl="2">
-            <Link href="/new/">
+            <Link href={`/new/${encodeURIComponent(title)}`}>
               <Button
                 type="submit"
                 className="btn btn-block btn-secondary mt-2"

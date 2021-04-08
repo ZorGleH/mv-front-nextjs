@@ -3,7 +3,6 @@ import {useState} from "react";
 import {Collapse, Navbar, NavbarToggler, Nav, NavItem} from "reactstrap";
 import Link from "next/link";
 import {useTranslation} from 'next-i18next'
-import logo from "@styles/logos/logo-color.svg";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRocket} from "@fortawesome/free-solid-svg-icons";
 import LanguageSelector from "./LanguageSelector";
@@ -21,7 +20,7 @@ const Header = () => {
         <Link href="/" className="navbar-brand">
           <div className="d-flex flex-row">
             <div className="align-self-center">
-              <img src={logo} alt="logo" height="32" />
+              <img src="logos/logo-color.svg" alt="logo" height="32" />
             </div>
             <div className="align-self-center ml-2">
               <div className="logo-text">
