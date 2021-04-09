@@ -67,7 +67,6 @@ const VoteBallot = ({candidates, title, numGrades, pid, err, token}) => {
 
   const {t} = useTranslation();
   const allGrades = translateGrades(t);
-  console.log
   const grades = allGrades.filter(grade => grade.value >= allGrades.length - numGrades);
 
 
