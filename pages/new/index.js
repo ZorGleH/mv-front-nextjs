@@ -83,13 +83,6 @@ export const getStaticProps = async ({locale}) => ({
   },
 })
 
-export const getStaticPaths = async () => {
-  return {
-    paths: [{params: {title: false}}],  // page without title is pre-rendered
-    fallback: true, // other pages are built at runtime
-  };
-};
-
 
 const CreateElection = (props) => {
 
