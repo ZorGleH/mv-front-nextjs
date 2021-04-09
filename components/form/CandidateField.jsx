@@ -16,20 +16,8 @@ import HelpButton from "@components/form/HelpButton";
 const DragHandle = sortableHandle(({children}) => (
   <span className="input-group-text indexNumber">{children}</span>
 ));
-const CandidateField = ({label, candIndex, onUpdate, onEnter, onDelete}) => {
-  const [value, setValue] = useState(label)
+const CandidateField = ({label, candIndex, onDelete, ...inputProps}) => {
   const {t} = useTranslation();
-  const handleChange = (e) => {
-    setValue(e.target.value)
-    onUpdate(e.target.value);
-  }
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onEnter(e.target.value)
-    }
-  }
 
   return (
     <Row>
@@ -42,12 +30,12 @@ const CandidateField = ({label, candIndex, onUpdate, onEnter, onDelete}) => {
           </InputGroupAddon>
           <Input
             type="text"
-            value={value}
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
+            value={label}
+            {...inputProps}
             placeholder={t("Candidate/proposal name...")}
             tabIndex={candIndex + 1}
             maxLength="250"
+            autoFocus
           />
           <ButtonWithConfirm className="btn btn-primary  border-light" label={label} onDelete={onDelete}>
           </ButtonWithConfirm>

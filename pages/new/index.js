@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import {useRouter} from "next/router"
-import {useTranslation} from "react-i18next";
+import {useTranslation} from "next-i18next";
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
 import {
   Collapse,
   Container,
@@ -76,6 +77,19 @@ const displayClockOptions = () =>
       </option>
     ));
 
+export const getStaticProps = async ({locale}) => ({
+  props: {
+    ...await serverSideTranslations(locale),
+  },
+})
+
+export const getStaticPaths = async () => {
+  return {
+    paths: [{params: {title: false}}],  // page without title is pre-rendered
+    fallback: true, // other pages are built at runtime
+  };
+};
+
 
 const CreateElection = (props) => {
 
@@ -102,10 +116,9 @@ const CreateElection = (props) => {
     if (!router.isReady) return;
 
     const {title: urlTitle} = router.query
-    setTitle(urlTitle && urlTitle[0])
+    setTitle(urlTitle || "")
   }, [router.isReady]);
 
-  console.log(router.query)
   const handleIsTimeLimited = event => {
     setTimeLimited(event.target.value === "1");
   };
@@ -146,10 +159,8 @@ const CreateElection = (props) => {
   }
 
   const handleSubmit = () => {
-    console.log(title)
     const check = checkFields();
-    // if (!check.ok) {
-    if (false) {
+    if (!check.ok) {
       toast.error(t(check.msg), {
         position: toast.POSITION.TOP_CENTER
       });
@@ -166,6 +177,8 @@ const CreateElection = (props) => {
         numGrades,
         start: start.getTime() / 1000,
         finish: finish.getTime() / 1000,
+        restrictResult: restrictResult,
+        locale: router.locale.substring(0, 2).toLowerCase(),
       },
       result => {
         if (result.id) {
@@ -187,7 +200,6 @@ const CreateElection = (props) => {
   };
 
   const check = checkFields();
-  console.log(check.msg)
   const grades = translateGrades(t);
 
 
@@ -519,30 +531,30 @@ const CreateElection = (props) => {
         </Collapse>
         <Row className="justify-content-end mt-2">
           <Col xs="12" md="3">
-            { //check.ok ? (
-              true ? (
-                <ConfirmModal
-                  title={title}
-                  candidates={candidates}
-                  isTimeLimited={isTimeLimited}
-                  start={start}
-                  finish={finish}
-                  emails={emails}
-                  grades={grades.slice(0, numGrades)}
-                  className={"btn btn-success float-right btn-block"}
-                  tabIndex={candidates.length + 1}
-                  confirmCallback={handleSubmit}
-                />
-              ) : (
-                <Button
-                  type="button"
-                  className="btn btn-dark float-right btn-block"
-                  onClick={handleSendNotReady}
-                >
-                  <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                  {t("Confirm")}
-                </Button>
-              )}
+            {check.ok ? (
+              <ConfirmModal
+                title={title}
+                candidates={candidates}
+                isTimeLimited={isTimeLimited}
+                start={start}
+                finish={finish}
+                emails={emails}
+                restrictResult={restrictResult}
+                grades={grades.slice(0, numGrades)}
+                className={"btn btn-success float-right btn-block"}
+                tabIndex={candidates.length + 1}
+                confirmCallback={handleSubmit}
+              />
+            ) : (
+              <Button
+                type="button"
+                className="btn btn-dark float-right btn-block"
+                onClick={handleSendNotReady}
+              >
+                <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                {t("Confirm")}
+              </Button>
+            )}
           </Col>
         </Row>
       </form>

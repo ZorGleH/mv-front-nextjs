@@ -2,31 +2,33 @@ import Head from 'next/head'
 import {Col, Container, Row} from "reactstrap";
 import Link from "next/link";
 import {useTranslation} from "next-i18next";
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
 import Paypal from "@components/banner/Paypal";
 import Gform from "@components/banner/Gform";
 import {getDetails} from '@services/api'
 
 
-export async function getServerSideProps(context) {
-  const {pid} = context.query
+export async function getServerSideProps({query: {pid}, locale}) {
+  const [res, translations] = await Promise.all([
+    getDetails(pid, res => ({ok: true, ...res}), err => ({ok: false, err})),
+    serverSideTranslations(locale),
+  ])
 
-  const res = await getDetails(
-    pid,
-    res => {
-      return {
-        props: {
-          invitationOnly: res.on_invitation_only,
-          restrictResults: res.restrict_results,
-          candidates: res.candidates.map((name, i) => ({id: i, label: name})),
-          title: res.title,
-          numGrades: res.num_grades,
-          pid: pid,
-        }
-      }
-    },
-    err => ({props: {err}})
-  )
-  return res
+  if (!res.ok) {
+    return {props: {err: res.err, ...translations}}
+  }
+
+  return {
+    props: {
+      ...translations,
+      invitationOnly: res.on_invitation_only,
+      restrictResults: res.restrict_results,
+      candidates: res.candidates.map((name, i) => ({id: i, label: name})),
+      title: res.title,
+      numGrades: res.num_grades,
+      pid: pid,
+    }
+  }
 }
 
 const VoteSuccess = ({title, invitationOnly, pid}) => {

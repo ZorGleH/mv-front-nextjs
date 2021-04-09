@@ -2,6 +2,7 @@ import {createRef} from 'react'
 import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {useTranslation} from 'next-i18next'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
 import {getDetails} from '@services/api'
 import {Col, Container, Row} from "reactstrap";
 import Link from "next/link";
@@ -16,36 +17,38 @@ import CopyField from "@components/CopyField";
 import Facebook from "@components/banner/Facebook";
 
 
-export async function getServerSideProps(context) {
-  const {pid} = context.query
+export async function getServerSideProps({query: {pid}, locale}) {
+  console.log("pid", pid)
+  const [res, translations] = await Promise.all([
+    getDetails(pid, res => ({ok: true, ...res}), err => ({ok: false, err})),
+    serverSideTranslations(locale),
+  ])
 
-  const res = await getDetails(
-    pid,
-    res => {
-      return {
-        props: {
-          invitationOnly: res.on_invitation_only,
-          restrictResults: res.restrict_results,
-          title: res.title,
-          pid: pid,
-        }
-      }
-    },
-    err => {return {props: {err}}}
-  )
-  console.log(res)
-  return res
+  if (!res.ok) {
+    return {props: {err: res.err, ...translations}}
+  }
+
+  return {
+    props: {
+      invitationOnly: res.on_invitation_only,
+      restrictResults: res.restrict_results,
+      title: res.title,
+      pid: pid,
+      ...translations,
+    }
+  }
 }
 
 
 const ConfirmElection = ({title, restrictResults, invitationOnly, pid, err}) => {
-  if (!pid) {
-    return (<><h1>{t("Oops! This election does not exist or it is not available anymore.")}</h1><p>{err}</p></>)
+  if (err) {
+    return (<Error value={err}></Error>)
   }
 
+  console.log(title, pid)
   const {t} = useTranslation();
 
-  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'http://localhost';
   const urlVote = new URL(`/vote/${pid}`, origin);
   const urlResult = new URL(`/result/${pid}`, origin);
 

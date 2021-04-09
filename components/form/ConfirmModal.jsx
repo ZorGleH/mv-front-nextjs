@@ -1,7 +1,7 @@
 import {useTranslation} from "next-i18next";
 import {useState} from "react";
 import {
-  faTrashAlt,
+  faExclamationTriangle,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
@@ -122,37 +122,38 @@ const ConfirmModal = ({tabIndex, title, candidates, grades, isTimeLimited, start
                     <u>{t("Results available at the close of the vote")}</u>
                   </h6>
                   <p className="m-2 p-0">
-                    {emails.length > 0 ? (
-                      <span>
-                        {t(
-                          "The results page will not be accessible until all participants have voted."
-                        )}
-                      </span>
-                    ) : (
-                      <span>
-                        {t(
-                          "The results page will not be accessible until the end date is reached."
-                        )}{" "}
+                    <span>
+                      {t(
+                        "The results page will not be accessible until the end date is reached."
+                      )}{" "}
                                   ({finish.toLocaleDateString()} {t("at")}{" "}
-                        {finish.toLocaleTimeString()})
+                      {finish.toLocaleTimeString()})
                       </span>
-                    )}
                   </p>
                 </div>
               </div>
-            ) : null}
+            ) : (
+              <div>
+                <div className="small bg-primary text-white p-3 mt-2 rounded">
+                  <h6 className="m-0 p-0">
+                    {t("Results available at any time")}
+                  </h6>
+                </div>
+              </div>
+            )}
           </div>
         </ModalBody>
         <ModalFooter>
           <Button
             color="primary-outline"
             className="text-primary border-primary"
+            onClick={toggle}>
+            {t("Cancel")}
+          </Button>
+          <Button color="primary"
             onClick={() => {toggle(); confirmCallback();}}
           >
             {t("Start the election")}
-          </Button>
-          <Button color="primary" onClick={toggle}>
-            {t("Cancel")}
           </Button>
         </ModalFooter>
       </Modal>

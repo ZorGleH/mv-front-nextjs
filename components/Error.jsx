@@ -1,11 +1,14 @@
+import Link from 'next/link'
 import {Container, Row, Col} from "reactstrap";
 
 
 const Error = props => (
   <Container>
     <Row>
-      <Link href="/" className="d-block ml-auto mr-auto mb-4">
-        <img src="./logos/logo-line-white.svg" alt="logo" height="128" />
+      <Link href="/">
+        <a className="d-block ml-auto mr-auto mb-4">
+          <img src="/logos/logo-line-white.svg" alt="logo" height="128" />
+        </a>
       </Link>
     </Row>
     <Row className="mt-4">
@@ -15,8 +18,10 @@ const Error = props => (
     </Row>
     <Row className="mt-4">
       <Col className="text-center">
-        <Link href="/" className="btn btn-secondary">
-          Back to home page
+        <Link href="/">
+          <a className="btn btn-secondary">
+            Back to home page
+  </a>
         </Link>
       </Col>
     </Row>

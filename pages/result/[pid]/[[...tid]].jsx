@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import Head from 'next/head'
 import {useTranslation} from "next-i18next";
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
 import {useRouter} from 'next/router'
 import {
   Container,
@@ -19,34 +20,42 @@ import Facebook from "@components/banner/Facebook";
 import Error from "@components/Error";
 
 
-export async function getServerSideProps(context) {
-  const {pid, tid} = context.query
+export async function getServerSideProps({query, locale}) {
+  const {pid, tid} = query
 
-  const [res, details] = await Promise.all([
-    getResults(pid, res => res, err => ({props: {err}})),
-    getDetails(pid, res => res, err => ({props: {err}})),
-    // getResults(pid, res => res, console.log),
-    // getDetails(pid, res => res, console.log),
+  const [res, details, translations] = await Promise.all([
+    getResults(pid, res => {ok: true, res}, err => ({ok: false, err})),
+    getDetails(pid, res => {ok: true, res}, err => ({ok: false, err})),
+    serverSideTranslations(locale),
   ])
-  // console.log(res, details)
+
+  if (!res.ok) {
+    return {props: {err: res.err, ...translations}}
+  }
+  if (!details.ok) {
+    return {props: {err: details.err, ...translations}}
+  }
+
   return {
     props: {
       title: details.title,
       numGrades: details.num_grades,
       candidates: res,
       pid: pid,
+      ...translations,
     }
   }
 }
 
 const Result = ({candidates, numGrades, title, pid, err}) => {
+  const {t} = useTranslation();
+
   if (err && err !== "") {
-    return <Error value={err} />;
+    return <Error value={apiErrors(err, t)} />;
   }
 
   const router = useRouter();
 
-  const {t} = useTranslation();
   const allGrades = translateGrades(t);
   const grades = allGrades.filter(grade => grade.value >= allGrades.length - numGrades);
   const offsetGrade = grades.length - numGrades;

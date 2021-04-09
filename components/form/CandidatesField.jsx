@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect, createRef} from 'react'
 import {useTranslation} from "react-i18next";
 import {
   Button,
@@ -17,32 +17,46 @@ import {
 import arrayMove from "array-move"
 import CandidateField from './CandidateField'
 
+// const SortableItem = sortableElement(({className, ...childProps}) => <li className={className}><CandidateField {...childProps} /></li>);
+// 
+// const SortableContainer = sortableContainer(({children}) => {
+//   return <ul className="sortable">{children}</ul>;
+// });
 
-const SortableItem = sortableElement(({className, ...childProps}) => <li className={className}><CandidateField {...childProps} /></li>);
+const SortableItem = ({className, ...childProps}) => <li className={className}><CandidateField {...childProps} /></li>;
 
-const SortableContainer = sortableContainer(({children}) => {
+const SortableContainer = ({children}) => {
   return <ul className="sortable">{children}</ul>;
-});
+};
 
 
 const CandidatesField = ({onChange}) => {
   const {t} = useTranslation();
-  const initialCandidates = [{label: "candidate 1"}, {label: "candidate 2"}]
-  const [candidates, setCandidates] = useState(initialCandidates)
+  const [candidates, setCandidates] = useState([])
+
   const addCandidate = () => {
     if (candidates.length < 1000) {
-      const newCandidates = candidates;
-      newCandidates.push({label: ""});
-      setCandidates(newCandidates);
+      candidates.push({label: "", fieldRef: createRef()});
+      setCandidates([...candidates]);
+      onChange(candidates)
     } else {
       console.error("Too many candidates")
     }
   };
 
+  useEffect(() => {
+    addCandidate();
+    addCandidate();
+  }, [])
+
+
   const removeCandidate = index => {
     if (candidates.length === 1) {
-      setCandidates(initialCandidates);
-      onChange(initialCandidates);
+      const newCandidates = []
+      newCandidates.push({label: "", fieldRef: createRef()});
+      newCandidates.push({label: "", fieldRef: createRef()});
+      setCandidates(newCandidates);
+      onChange(newCandidates)
     }
     else {
       const newCandidates = candidates.filter((c, i) => i != index)
@@ -53,17 +67,20 @@ const CandidatesField = ({onChange}) => {
 
   const editCandidate = (index, label) => {
     candidates[index].label = label
-    setCandidates(candidates);
+    setCandidates([...candidates]);
     onChange(candidates);
   };
 
-  const onEnter = (index) => {
-    if (index + 1 === candidates.length) {
-      addCandidate();
+  const handleKeyPress = (e, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (index + 1 === candidates.length) {
+        addCandidate();
+      }
+      else {
+        candidates[index + 1].fieldRef.current.focus();
+      }
     }
-    // TODO else {
-    //  candidateInputs[index + 1].focus();
-    //}
   }
 
   const onSortEnd = ({oldIndex, newIndex}) => {
@@ -74,7 +91,6 @@ const CandidatesField = ({onChange}) => {
     <>
       <SortableContainer onSortEnd={onSortEnd}>
         {candidates.map((candidate, index) => {
-          // const className = candidate.label !== "" ? "m-0" : "d-none";
           const className = "sortable"
           return (
             <SortableItem
@@ -83,9 +99,10 @@ const CandidatesField = ({onChange}) => {
               index={index}
               candIndex={index}
               label={candidate.label}
-              onUpdate={(label) => editCandidate(index, label)}
-              onEnter={() => onEnter(index)}
               onDelete={() => removeCandidate(index)}
+              onChange={(e) => editCandidate(index, e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
+              innerRef={candidate.fieldRef}
             />
           )
         })}

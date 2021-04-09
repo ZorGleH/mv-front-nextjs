@@ -1,54 +1,52 @@
 import {useState} from "react"
 import Head from 'next/head'
 import {useRouter} from 'next/router'
-import {getDetails, castBallot, apiErrors} from '@services/api'
-import {translateGrades} from '@services/grades'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
 import {useTranslation} from "next-i18next";
 import {Button, Col, Container, Row} from "reactstrap";
 import {toast, ToastContainer} from "react-toastify";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
+import {getDetails, castBallot, apiErrors} from '@services/api'
+import {translateGrades} from '@services/grades'
 
 const shuffle = array => array.sort(() => Math.random() - 0.5);
 
 
-export async function getServerSideProps(context) {
-  const {pid, tid} = context.query
+export async function getServerSideProps({query: {pid, tid}, locale}) {
+  const [res, translations] = await Promise.all([
+    getDetails(pid, res => ({ok: true, ...res}), err => ({ok: false, err})),
+    serverSideTranslations(locale),
+  ])
 
-  const res = await getDetails(
-    pid,
-    res => {
-      shuffle(res.candidates);
-      return {
-        props: {
-          invitationOnly: res.on_invitation_only,
-          restrictResults: res.restrict_results,
-          candidates: res.candidates.map((name, i) => ({id: i, label: name})),
-          title: res.title,
-          numGrades: res.num_grades,
-          pid: pid,
-          token: tid || null,
-        }
-      }
-    },
-    err => ({props: {err}})
-  )
-  return res
+  if (!res.ok) {
+    return {props: {err: res.err, ...translations}}
+  }
+
+  console.log(res)
+
+  shuffle(res.candidates);
+
+  return {
+    props: {
+      ...translations,
+      invitationOnly: res.on_invitation_only,
+      restrictResults: res.restrict_results,
+      candidates: res.candidates.map((name, i) => ({id: i, label: name})),
+      title: res.title,
+      numGrades: res.num_grades,
+      pid: pid,
+      token: tid || null,
+    }
+  }
 }
 
 const VoteBallot = ({candidates, title, numGrades, pid, err, token}) => {
 
   if (err) {
-    return (
-      <Container>
-        <Row>
-          <Col>
-            <h3>{t(err)}</h3>
-          </Col>
-        </Row>
-      </Container>
-    )
+    return (<Error value={err}></Error>)
   }
+
   const [judgments, setJudgments] = useState([]);
   const colSizeCandidateLg = 4
   const colSizeCandidateMd = 6

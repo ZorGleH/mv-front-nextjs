@@ -40,12 +40,13 @@ const ButtonWithConfirm = ({className, label, onDelete}) => {
           <Button
             color="primary-outline"
             className="text-primary border-primary"
+            onClick={toggle}>
+            {t("No")}
+          </Button>
+          <Button color="primary"
             onClick={() => {toggle(); onDelete();}}
           >
             {t("Yes")}
-          </Button>
-          <Button color="primary" onClick={toggle}>
-            {t("No")}
           </Button>
         </ModalFooter>
       </Modal>
