@@ -3,6 +3,9 @@ import '@styles/footer.css'
 import '@styles/loader.css'
 import "@styles/scss/config.scss";
 // import "~react-flags-select/css/react-flags-select.css";
+// 
+import '@fortawesome/fontawesome-svg-core/styles.css' // Import the CSS
+
 import {appWithTranslation} from 'next-i18next'
 import {AppProvider} from '@services/context.js'
 import Header from '@components/layouts/Header'

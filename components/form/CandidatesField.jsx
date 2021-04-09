@@ -27,7 +27,7 @@ const SortableContainer = sortableContainer(({children}) => {
 
 const CandidatesField = ({onChange}) => {
   const {t} = useTranslation();
-  const initialCandidates = [{label: ""}]
+  const initialCandidates = [{label: "candidate 1"}, {label: "candidate 2"}]
   const [candidates, setCandidates] = useState(initialCandidates)
   const addCandidate = () => {
     if (candidates.length < 1000) {

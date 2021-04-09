@@ -24,7 +24,7 @@ const Header = () => {
             <a className="navbar-brand">
               <div className="d-flex flex-row">
                 <div className="align-self-center">
-                  <img src="logos/logo-color.svg" alt="logo" height="32" />
+                  <img src="/logos/logo-color.svg" alt="logo" height="32" />
                 </div>
                 <div className="align-self-center ml-2">
                   <div className="logo-text">

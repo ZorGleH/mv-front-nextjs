@@ -16,7 +16,6 @@ export const getStaticProps = async ({locale}) => ({
 const Home = () => {
   const [title, setTitle] = useState(null)
   const {t} = useTranslation();
-  console.log(t)
   return (
     <Container >
       <form autoComplete="off">

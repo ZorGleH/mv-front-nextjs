@@ -7,7 +7,7 @@ import {
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-const ConfirmModal = ({tabIndex, title, candidates, grades, isTimeLimited, start, finish, emails, restrictResult, className}) => {
+const ConfirmModal = ({tabIndex, title, candidates, grades, isTimeLimited, start, finish, emails, restrictResult, className, confirmCallback}) => {
   const [visibled, setVisibility] = useState(false);
   const {t} = useTranslation();
   const toggle = () => setVisibility(!visibled)
@@ -147,7 +147,7 @@ const ConfirmModal = ({tabIndex, title, candidates, grades, isTimeLimited, start
           <Button
             color="primary-outline"
             className="text-primary border-primary"
-            onClick={() => {toggle(); onDelete();}}
+            onClick={() => {toggle(); confirmCallback();}}
           >
             {t("Start the election")}
           </Button>

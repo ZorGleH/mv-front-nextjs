@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {useRouter} from "next/router"
 import {useTranslation} from "react-i18next";
 import {
@@ -17,7 +17,7 @@ import {
 import {ReactMultiEmail, isEmail} from "react-multi-email";
 import "react-multi-email/style.css";
 import {toast, ToastContainer} from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 import queryString from "query-string";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
@@ -28,7 +28,7 @@ import {
   faExclamationTriangle
 } from "@fortawesome/free-solid-svg-icons";
 import {useAppContext} from "@services/context";
-import {api} from '@services/api'
+import {createElection} from '@services/api'
 import {translateGrades} from '@services/grades'
 import HelpButton from "@components/form/HelpButton";
 import Loader from "@components/wait";
@@ -78,11 +78,12 @@ const displayClockOptions = () =>
 
 
 const CreateElection = (props) => {
+
   const {t} = useTranslation();
 
   // default value : start at the last hour
   const now = new Date();
-  const [title, setTitle] = useState(props.title || "");
+  const [title, setTitle] = useState("");
   const [candidates, setCandidates] = useState([{label: ""}, {label: ""}])
   const [numGrades, setNumGrades] = useState(5);
   const [waiting, setWaiting] = useState(false);
@@ -95,6 +96,16 @@ const CreateElection = (props) => {
   const [finish, setFinish] = useState(new Date(start.getTime() + 7 * 24 * 3600 * 1000))
   const [emails, setEmails] = useState([])
 
+  // set the title on loading
+  const router = useRouter()
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const {title: urlTitle} = router.query
+    setTitle(urlTitle && urlTitle[0])
+  }, [router.isReady]);
+
+  console.log(router.query)
   const handleIsTimeLimited = event => {
     setTimeLimited(event.target.value === "1");
   };
@@ -135,8 +146,10 @@ const CreateElection = (props) => {
   }
 
   const handleSubmit = () => {
+    console.log(title)
     const check = checkFields();
-    if (!check.ok) {
+    // if (!check.ok) {
+    if (false) {
       toast.error(t(check.msg), {
         position: toast.POSITION.TOP_CENTER
       });
@@ -153,11 +166,9 @@ const CreateElection = (props) => {
         numGrades,
         start: start.getTime() / 1000,
         finish: finish.getTime() / 1000,
-        locale,
       },
       result => {
         if (result.id) {
-          router = useRouter();
           router.push(`/new/confirm/${result.id}`)
         } else {
           toast.error(t("Unknown error. Try again please."), {
@@ -508,28 +519,30 @@ const CreateElection = (props) => {
         </Collapse>
         <Row className="justify-content-end mt-2">
           <Col xs="12" md="3">
-            {check.ok ? (
-              <ConfirmModal
-                title={title}
-                candidates={candidates}
-                isTimeLimited={isTimeLimited}
-                start={start}
-                finish={finish}
-                emails={emails}
-                grades={grades.slice(0, numGrades)}
-                className={"btn btn-success float-right btn-block"}
-                tabIndex={candidates.length + 1}
-              />
-            ) : (
-              <Button
-                type="button"
-                className="btn btn-dark float-right btn-block"
-                onClick={handleSendNotReady}
-              >
-                <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                {t("Confirm")}
-              </Button>
-            )}
+            { //check.ok ? (
+              true ? (
+                <ConfirmModal
+                  title={title}
+                  candidates={candidates}
+                  isTimeLimited={isTimeLimited}
+                  start={start}
+                  finish={finish}
+                  emails={emails}
+                  grades={grades.slice(0, numGrades)}
+                  className={"btn btn-success float-right btn-block"}
+                  tabIndex={candidates.length + 1}
+                  confirmCallback={handleSubmit}
+                />
+              ) : (
+                <Button
+                  type="button"
+                  className="btn btn-dark float-right btn-block"
+                  onClick={handleSendNotReady}
+                >
+                  <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                  {t("Confirm")}
+                </Button>
+              )}
           </Col>
         </Row>
       </form>

@@ -1,18 +1,14 @@
-import React, { useContext } from "react";
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCommentAlt} from "@fortawesome/free-solid-svg-icons";
-import { AppContext } from "../../AppContext"
+import {api} from "@services/api"
 
 
 const Gform = (props) => {
-  const context = useContext(AppContext);
-  console.log(context);
-
   return (
     <a
       className={props.className}
-      href={context.feedbackForm}
+      href={api.feedbackForm}
       target="_blank"
       rel="noopener noreferrer"
     >
