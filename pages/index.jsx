@@ -48,7 +48,7 @@ const Home = () => {
             />
           </Col>
           <Col xs="12" md="3" xl="2">
-            <Link href={`/new/${encodeURIComponent(title)}`}>
+            <Link href={{pathname: "/new/", query: {title: title}}}>
               <Button
                 type="submit"
                 className="btn btn-block btn-secondary mt-2"
