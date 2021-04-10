@@ -1,0 +1,11 @@
+{{#i18n 'email.hello'}}Hi there! 🙂{{/i18n}}
+
+{{#i18n 'email.why'}}This email was sent to you because your email was filled out to participate in the vote on the subject:{{/i18n}}
+
+{{ title }}
+
+{{#i18n 'email.linkVote' }}The link for the vote is as follows:{{/i18n}}
+{{ urlVote }}
+
+{{#i18n 'email.linkVote' }}The link that will give you the results when they are available is as follows:{{/i18n}}
+{{ urlResult }}
