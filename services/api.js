@@ -10,7 +10,40 @@ const api = {
 };
 
 
+const sendInviteMail = (title, mails, tokens) => {
+  /**
+   * Send an invitation mail using a micro-service with Netlify
+   */
+
+  if (mails.length !== tokens.length) {
+    throw new Error("The number of emails differ from the number of tokens")
+  }
+
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'http://localhost';
+  const urlVote = (pid) => new URL(`/vote/${pid}`, origin);
+  const urlResult = (pid) => new URL(`/result/${pid}`, origin);
+
+  const reqs = mails.map((mail, index) =>
+    fetch("/.netlify/functions/send-invite-mail/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.Stringify({
+        urlVote: urlVote(tokens[index]),
+        urlResult: urlResult(tokens[index]),
+        title: title,
+        dest: mail
+      })
+    }))
+  return Promise.all(reqs)
+}
+
+
 const createElection = (title, candidates, {
+  /**
+   * Create an election from its title, its candidates and a bunch of options
+   */
   emails, numGrades, start, finish, restrictResult, locale},
   successCallback, failureCallback) => {
 
@@ -34,6 +67,7 @@ const createElection = (title, candidates, {
       select_language: locale || "en",
       front_url: window.location.origin,
       restrict_results: restrictResult,
+      send_mail: false,
     })
   })
     .then((response) => {
@@ -42,6 +76,7 @@ const createElection = (title, candidates, {
       }
       return response.json();
     })
+    .then(res => sendInviteMail(title, emails || [], res.tokens))
     .then(successCallback)
     .catch(failureCallback || console.log);
 }
@@ -159,4 +194,5 @@ export const apiErrors = (error, t) => {
     return t("The parameters of the election are incorrect.");
   }
 };
-export {api, getDetails, getResults, createElection, castBallot}
+
+export {api, getDetails, getResults, createElection, sendInviteMail, castBallot}

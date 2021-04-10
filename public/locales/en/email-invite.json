@@ -1,5 +1,9 @@
 {
-  "hello": "Hi there!",
-  "mieux voter": "Better Vote",
-  "happy to send this mail": "We are happy to send you this email! You will be able to vote using majority judgment."
+  "email.hello": "Hi, there! 🙂",
+  "email.why": "This email was sent to you because your email was filled out to participate in the vote on the subject:",
+  "email.linkVote": "The link for the vote is as follows:",
+  "email.linkResult": "The link that will give you the results when they are available is as follows:",
+  "email.happy": "We are happy to send you this email! You will be able to vote using majority judgment.",
+   "email.copyLink": "If that doesn't work, copy and paste the following link into your browser:",
+   "email.bye": "Good vote! 🤗"
 }
