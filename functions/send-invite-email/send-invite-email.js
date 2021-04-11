@@ -43,6 +43,7 @@ i18next
     lng: "en",
     ns: ["emailInvite", "common"],
     defaultNS: "emailInvite",
+    fallbackNS: "common",
     debug: false,
     fallbackLng: ["en", "fr"],
     backend: {
@@ -97,25 +98,26 @@ const sendMail = async (event) => {
   }
 
   const data = JSON.parse(event.body)
-  if (!data.urlVote || !data.urlResult || !data.dest) {
+  if (!data.recipientVariables || !data.title) {
     return {
       statusCode: 422,
-      body: 'URLs for vote and results, and destinataire are required.'
+      body: 'Recipient variables and title are required.'
     }
   }
 
   i18next.changeLanguage(data.language || "en")
   const templateData = {
-    urlVote: data.urlVote,
-    urlResult: data.urlResult,
     title: data.title,
   }
 
   const mailgunData = {
     from: `${i18next.t("Mieux Voter")} <mailgun@mg.app.mieuxvoter.fr>`,
-    to: [data.dest],
+    to: Object.keys(data.recipientVariables),
     text: txtTemplate(templateData),
     html: htmlTemplate(templateData),
+    "h:Reply-To": "app@mieuxvoter.fr",
+    'recipient-variables': JSON.stringify(data.recipientVariables),
+
   }
 
   const res = mg.messages.create('mg.app.mieuxvoter.fr', mailgunData)

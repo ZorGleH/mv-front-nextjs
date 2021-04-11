@@ -24,22 +24,27 @@ const sendInviteMail = (res) => {
   const urlVote = (pid) => new URL(`/vote/${pid}`, origin);
   const urlResult = (pid) => new URL(`/result/${pid}`, origin);
 
-  const reqs = mails.map((mail, index) =>
-    fetch("/.netlify/functions/send-invite-email/", {
+  const recipientVariables = {};
+  tokens.forEach((token, index) => {
+    recipientVariables[mails[index]] = {
+      urlVote: urlVote(token),
+      urlResult: urlResult(token),
+    }
+  })
+
+  const req = fetch("/.netlify/functions/send-invite-email/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        urlVote: urlVote(tokens[index]),
-        urlResult: urlResult(tokens[index]),
-        title: title,
-        dest: mail
+        recipientVariables,
+        title,
       })
-    }))
-  console.log(reqs)
+    })
+
   return Promise.all(
-    [new Promise((resolve, reject) => { resolve(res)}), ...reqs]
+    [new Promise((resolve, reject) => { resolve(res)}), req]
   )
 }
 
@@ -81,7 +86,7 @@ const createElection = (title, candidates, {
       return response.json();
     })
     .then(res => sendInviteMail({ mails: emails || [], ...res}))
-    .then(([res, ...sendMail]) => res)
+    .then((res) => res[0]) // remove response from mail invitations
     .then(successCallback)
     .catch(failureCallback || console.log);
 }

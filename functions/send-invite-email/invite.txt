@@ -8,11 +8,11 @@
 
 {{#i18n 'email.linkVote' }}The link for the vote is as follows:{{/i18n}}
 
-{{ urlVote }}
+%recipient.urlVote%
 
 {{#i18n 'email.linkResult' }}The link that will give you the results when they are available is as follows:{{/i18n}}
 
-{{ urlResult }}
+%recipient.urlResult%
 
 {{#i18n 'email.bye'}}Good vote{{/i18n}}
 
