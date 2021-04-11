@@ -15,7 +15,10 @@ const LanguageSelector = () => {
   return (
     <ReactFlagsSelect
       onSelect={selectHandler}
-      countries={["GB", "FR", "ES", "DE", "RU"]}
+      countries={
+        // ["GB", "FR", "ES", "DE", "RU"]
+        ["GB", "FR"]
+      }
       showOptionLabel={false}
       selected={localeShort}
       selectedSize={15}

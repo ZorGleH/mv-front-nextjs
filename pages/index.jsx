@@ -30,14 +30,14 @@ const Home = () => {
         <Row>
           <Col className="text-center">
             <h3>
-              {t("organize an election with Majority Judgment.")}
+              {t("common.valueProp")}
             </h3>
           </Col>
         </Row>
         <Row className="mt-2">
           <Col xs="12" md="9" xl="6" className="offset-xl-2">
             <Input
-              placeholder={t("Write here the question of your election")}
+              placeholder={t("resource.writeQuestion")}
               autoFocus
               required
               className="mt-2"
@@ -54,14 +54,14 @@ const Home = () => {
                 className="btn btn-block btn-secondary mt-2"
               >
                 <FontAwesomeIcon icon={faRocket} className="mr-2" />
-                {t("Start")}
+                {t("resource.start")}
               </Button>
             </Link>
           </Col>
         </Row>
         <Row className="mt-4">
           <Col className="text-center">
-            <p>{t("No advertising or ad cookies")}</p>
+            <p>{t("resource.noAds")}</p>
           </Col>
         </Row>
       </form>

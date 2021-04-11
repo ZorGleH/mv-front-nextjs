@@ -96,8 +96,13 @@ const ConfirmElection = ({title, restrictResults, invitationOnly, pid, err}) => 
       <Head>
         <title>{t("Successful election creation!")}</title>
         <link rel="icon" href="/favicon.ico" />
-        <meta property="og:title" content={title} />
-      </Head>
+      <meta key="og:title" property="og:title" content={title}/>
+      <meta
+        property="og:description"
+        key="og:description"
+        content={ t("common.application") }
+      />
+    </Head>
 
 
       <Row className="mt-5">

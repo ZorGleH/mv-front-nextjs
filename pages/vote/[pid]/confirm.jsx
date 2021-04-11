@@ -35,6 +35,16 @@ const VoteSuccess = ({title, invitationOnly, pid}) => {
   const {t} = useTranslation();
   return (
     <Container>
+      <Head>
+        <title>{t("Successful election creation!")}</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta key="og:title" property="og:title" content={title}/>
+        <meta
+          property="og:description"
+          key="og:description"
+          content={ t("common.application") }
+        />
+    </  Head>
       <Row>
         <Link href="/">
           <a className="d-block ml-auto mr-auto mb-4">

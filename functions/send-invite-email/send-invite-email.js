@@ -85,7 +85,7 @@ Handlebars.registerHelper("i18n", function (key, {hash, data, fn}) {
 const txtStr = fs.readFileSync(__dirname + "/invite.txt").toString();
 const txtTemplate = Handlebars.compile(txtStr);
 const htmlStr = fs.readFileSync(__dirname + "/invite.html").toString();
-const htmlTemplate = Handlebars.compile(txtStr);
+const htmlTemplate = Handlebars.compile(htmlStr);
 
 const sendMail = async (event) => {
   if (event.httpMethod !== 'POST') {

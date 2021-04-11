@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react";
+import Head from 'next/head'
 import {useRouter} from "next/router"
 import {useTranslation} from "next-i18next";
 import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
@@ -198,22 +199,30 @@ const CreateElection = (props) => {
 
   return (
     <Container>
+    <Head>
+      <meta key="og:title" property="og:title" content={ t("common.application") }/>
+      <meta
+        property="og:description"
+        key="og:description"
+        content={t("resource.valueProp")}
+    />
+    </Head>
       <ToastContainer />
       {waiting ? <Loader /> : ""}
       <form onSubmit={handleSubmit} autoComplete="off">
         <Row>
           <Col>
-            <h3>{t("Start an election")}</h3>
+            <h3>{t("resource.startVote")}</h3>
           </Col>
         </Row>
         <hr />
         <Row className="mt-4">
           <Col xs="12">
-            <Label for="title">{t("Question of the election")}</Label>
+            <Label for="title">{t("resource.questionLabel")}</Label>
           </Col>
           <Col>
             <Input
-              placeholder={t("Write here the question of your election")}
+              placeholder={t("resource.writeQuestionHere")}
               tabIndex="1"
               name="title"
               id="title"
@@ -225,22 +234,16 @@ const CreateElection = (props) => {
           </Col>
           <Col xs="auto" className="align-self-center pl-0">
             <HelpButton>
-              {t(
-                "Write here your question or introduce simple your election (250 characters max.)"
-              )}
-              <br />
-              <u>{t("For example:")}</u>{" "}
+              <u>{t("resource.eg")}</u>{" "}
               <em>
-                {t(
-                  "For the role of my representative, I judge this candidate..."
-                )}
+                {t("resource.exampleQuestion")}
               </em>
             </HelpButton>
           </Col>
         </Row>
         <Row className="mt-4">
           <Col xs="12">
-            <Label for="title">{t("Candidates/Proposals")}</Label>
+            <Label for="title">{t("common.candidates")}</Label>
           </Col>
           <Col xs="12">
             <CandidatesField onChange={setCandidates} />
@@ -257,7 +260,7 @@ const CreateElection = (props) => {
               onClick={toggleAdvancedOptions}
             >
               <FontAwesomeIcon icon={faCogs} className="mr-2" />
-              {t("Advanced options")}
+              {t("resource.advancedOptions")}
             </Button>
           </Col>
         </Row>
