@@ -32,7 +32,7 @@ const CandidateField = ({label, candIndex, onDelete, ...inputProps}) => {
             type="text"
             value={label}
             {...inputProps}
-            placeholder={t("Candidate/proposal name...")}
+            placeholder={t("resource.candidatePlaceholder")}
             tabIndex={candIndex + 1}
             maxLength="250"
             autoFocus

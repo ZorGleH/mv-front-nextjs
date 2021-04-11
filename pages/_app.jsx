@@ -11,10 +11,10 @@ import Footer from '@components/layouts/Footer'
 
 
 function Application({Component, pageProps}) {
-  const { t } = useTranslation();
   const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'http://localhost';
   return (<AppProvider>
     <Head>
+    <link rel="icon" key="favicon" href="/favicon.ico" />
     <meta property="og:url" content={origin} key="og:url" />
     <meta property="og:type" content="website" key="og:type" />
     <meta

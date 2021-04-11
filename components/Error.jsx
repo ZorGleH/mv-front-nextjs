@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import {Container, Row, Col} from "reactstrap";
+import {useTranslation} from "next-i18next";
 
 
-const Error = props => (
+const Error = props => {
+  const {t} = useTranslation();
+  return (
   <Container>
     <Row>
       <Link href="/">
@@ -20,12 +23,13 @@ const Error = props => (
       <Col className="text-center">
         <Link href="/">
           <a className="btn btn-secondary">
-            Back to home page
+    { t("common.backHomepage") }
   </a>
         </Link>
       </Col>
     </Row>
   </Container>
 );
+}
 
 export default Error

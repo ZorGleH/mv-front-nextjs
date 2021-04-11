@@ -6,7 +6,7 @@
   "Voting platform": "Plateforme de vote",
   "Majority Judgment": "Jugement Majoritaire",
   "Start an election": "Lancer une élection",
-  "Candidate/proposal name...": "Name du candidat/proposition",
+  "resource.candidatePlaceholder": "Name du candidat/proposition",
   "Delete?": "Supprimer ?",
   "Are you sure to delete": "Êtes-vous sûr(e) de supprimer",
   "the row": "la ligne",
@@ -48,6 +48,6 @@
   "You can start another election.": "Vous pouvez démarrer une autre élection.",
   "Go back to homepage": "Revenir à la page d'accueil",
   "You have to judge every candidate/proposal!": "Vous devez évaluer tous les candidats/propositions !",
-  "Your participation was recorded with success!": "Votre participation a été enregistrée avec succès !",
-  "Thanks for your participation.": "Merci de votre participation."
+  "resource.voteSuccess": "Votre participation a été enregistrée avec succès !",
+  "resource.thanks": "Merci de votre participation."
 }

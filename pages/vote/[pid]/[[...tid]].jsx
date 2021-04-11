@@ -109,8 +109,14 @@ const VoteBallot = ({candidates, title, numGrades, pid, err, token}) => {
     <Container>
       <Head>
         <title>{title}</title>
-        <link rel="icon" href="/favicon.ico" />
-        <meta property="og:title" content={title} />
+       
+        <title>{title}</title>
+        <meta key="og:title" property="og:title" content={title}/>
+        <meta
+          property="og:description"
+          key="og:description"
+          content={ t("common.application") }
+        />
       </Head>
       <ToastContainer />
       <form onSubmit={handleSubmit} autoComplete="off">

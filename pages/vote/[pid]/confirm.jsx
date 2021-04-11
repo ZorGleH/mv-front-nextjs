@@ -36,7 +36,7 @@ const VoteSuccess = ({title, invitationOnly, pid}) => {
   return (
     <Container>
       <Head>
-        <title>{t("Successful election creation!")}</title>
+        <title>{t("resource.voteSuccess")}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta key="og:title" property="og:title" content={title}/>
         <meta
@@ -44,7 +44,7 @@ const VoteSuccess = ({title, invitationOnly, pid}) => {
           key="og:description"
           content={ t("common.application") }
         />
-    </  Head>
+    </Head>
       <Row>
         <Link href="/">
           <a className="d-block ml-auto mr-auto mb-4">
@@ -54,8 +54,8 @@ const VoteSuccess = ({title, invitationOnly, pid}) => {
       </Row>
       <Row className="mt-4">
         <Col className="text-center offset-lg-3" lg="6">
-          <h2>{t("Your participation was recorded with success!")}</h2>
-          <p>{t("Thanks for your participation.")}</p>
+          <h2>{t("resource.voteSuccess")}</h2>
+          <p>{t("resource.thanks")}</p>
           <div className="mt-3">
             <Gform className="btn btn-secondary" />
           </div>

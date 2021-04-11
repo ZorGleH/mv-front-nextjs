@@ -69,7 +69,7 @@ const Footer = () => {
             className={bboxLink6.top === bboxLink7.top ? "" : "no-tack"}
           >
             <Link href="/legal-notices" style={linkStyle}>
-              {t("Legal notices")}
+              {t("resource.legalNotices")}
             </Link>
           </li>
           <li ref={link7}>
