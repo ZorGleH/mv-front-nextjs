@@ -10,10 +10,11 @@ const api = {
 };
 
 
-const sendInviteMail = (title, mails, tokens) => {
+const sendInviteMail = (res) => {
   /**
    * Send an invitation mail using a micro-service with Netlify
    */
+  const {title, mails, tokens} = res;
 
   if (mails.length !== tokens.length) {
     throw new Error("The number of emails differ from the number of tokens")
@@ -24,19 +25,22 @@ const sendInviteMail = (title, mails, tokens) => {
   const urlResult = (pid) => new URL(`/result/${pid}`, origin);
 
   const reqs = mails.map((mail, index) =>
-    fetch("/.netlify/functions/send-invite-mail/", {
+    fetch("/.netlify/functions/send-invite-email/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.Stringify({
+      body: JSON.stringify({
         urlVote: urlVote(tokens[index]),
         urlResult: urlResult(tokens[index]),
         title: title,
         dest: mail
       })
     }))
-  return Promise.all(reqs)
+  console.log(reqs)
+  return Promise.all(
+    [new Promise((resolve, reject) => { resolve(res)}), ...reqs]
+  )
 }
 
 
@@ -76,14 +80,17 @@ const createElection = (title, candidates, {
       }
       return response.json();
     })
-    .then(res => sendInviteMail(title, emails || [], res.tokens))
+    .then(res => sendInviteMail({ mails: emails || [], ...res}))
+    .then(([res, ...sendMail]) => res)
     .then(successCallback)
     .catch(failureCallback || console.log);
 }
 
 
 const getResults = (pid, successCallback, failureCallback) => {
-  // Fetch results from external API
+  /**
+   * Fetch results from external API
+   */
 
   const endpoint = new URL(
     api.routesServer.getResults.replace(
@@ -92,7 +99,7 @@ const getResults = (pid, successCallback, failureCallback) => {
     ),
     api.urlServer
   );
-  // console.log(endpoint.href)
+
   return fetch(endpoint.href)
     .then((response) => {
       if (!response.ok) {
@@ -107,7 +114,9 @@ const getResults = (pid, successCallback, failureCallback) => {
 }
 
 const getDetails = (pid, successCallback, failureCallback) => {
-  // Fetch data from external API
+  /**
+   * Fetch data from external API
+   */
 
   const detailsEndpoint = new URL(
     api.routesServer.getElection.replace(
@@ -124,13 +133,15 @@ const getDetails = (pid, successCallback, failureCallback) => {
       return response.json();
     })
     .then(successCallback || (res => res))
-    //.catch(err => err)
     .catch(failureCallback || console.log);
 
 }
 
 
 const castBallot = (judgments, pid, token, callbackSuccess, callbackError) => {
+  /**
+   * Save a ballot on the remote database
+   */
 
   const endpoint = new URL(
     api.routesServer.voteElection,

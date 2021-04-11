@@ -18,7 +18,6 @@ import Facebook from "@components/banner/Facebook";
 
 
 export async function getServerSideProps({query: {pid}, locale}) {
-  console.log("pid", pid)
   const [res, translations] = await Promise.all([
     getDetails(pid, res => ({ok: true, ...res}), err => ({ok: false, err})),
     serverSideTranslations(locale),
@@ -45,7 +44,6 @@ const ConfirmElection = ({title, restrictResults, invitationOnly, pid, err}) => 
     return (<Error value={err}></Error>)
   }
 
-  console.log(title, pid)
   const {t} = useTranslation();
 
   const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'http://localhost';

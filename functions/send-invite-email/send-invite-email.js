@@ -51,9 +51,7 @@ i18next
         HttpApi,
       ],
       backendOptions: [
-        {
-          loadPath: '/public/locales/{{lng}}/{{ns}}.json',
-        },
+        { loadPath: '/public/locales/{{lng}}/{{ns}}.json' },
         {},
       ]
     },
@@ -116,8 +114,8 @@ const sendMail = async (event) => {
   const mailgunData = {
     from: `${i18next.t("Mieux Voter")} <mailgun@mg.app.mieuxvoter.fr>`,
     to: [data.dest],
-    text: txtTemplate({i18next: {replace: templateData}}),
-    html: htmlTemplate({i18next: {replace: templateData}}),
+    text: txtTemplate(templateData),
+    html: htmlTemplate(templateData),
   }
 
   const res = mg.messages.create('mg.app.mieuxvoter.fr', mailgunData)
