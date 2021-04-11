@@ -181,8 +181,8 @@ const CreateElection = (props) => {
           toast.error(t("Unknown error. Try again please."), {
             position: toast.POSITION.TOP_CENTER
           });
+          setWaiting(false);
         }
-        setWaiting(false);
       }
     )
   }

@@ -1,6 +1,6 @@
 const api = {
-  urlServer: process.env.NEXT_PUBLIC_SERVER_URL,
-  feedbackForm: process.env.NEXT_PUBLIC_FEEDBACK_FORM,
+  urlServer: process.env.NEXT_PUBLIC_SERVER_URL || "https://demo.mieuxvoter.fr/api/",
+  feedbackForm: process.env.NEXT_PUBLIC_FEEDBACK_FORM || "https://docs.google.com/forms/d/e/1FAIpQLScuTsYeBXOSJAGSE_AFraFV7T2arEYua7UCM4NRBSCQQfRB6A/viewform",
   routesServer: {
     setElection: "election/",
     getElection: "election/get/:slug/",
